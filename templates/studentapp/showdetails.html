@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Show Students</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: url("{% static 'images/bg.jpg' %}") center/cover no-repeat;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, .95);
+            padding: 30px;
+            max-width: 1000px;
+            margin: auto;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, .2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* --- search bar --- */
+        form {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        form input[type="text"] {
+            padding: 8px 10px;
+            width: 240px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        form input[type="submit"] {
+            padding: 8px 14px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        /* --- table --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #007bff;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        /* --- buttons --- */
+        .btn {
+            padding: 6px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .update-btn {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+        }
+
+        .back-btn {
+            background: #28a745;
+            display: inline-block;
+            margin-top: 30px;
+        }
+
+        /* --- pagination --- */
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination span, .pagination a {
+            margin: 0 6px;
+            padding: 6px 12px;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .pagination .current {
+            background: #007bff;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Show Students</h2>
+
+    <!-- 🔍 Search -->
+    <!-- 🔍 Search -->
+<form method="get" style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 20px;">
+    <input type="text" name="q" placeholder="Search by Name / Branch / College…" 
+           value="{{ query|default:'' }}" style="width: 250px; padding: 8px;">
+    
+    <input type="submit" value="Search" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+
+    {% if query %}
+    <!-- 👇 This button will only show when a query exists -->
+    <a href="{% url 'showdetails' %}" style="padding: 8px 16px; background: #30dbbfff; color: white; text-decoration: none; border-radius: 5px;">
+        Clear
+    </a>
+    {% endif %}
+</form>
+
+
+    <!-- 📋 Table -->
+    <table>
+        <thead>
+        <tr>
+            <th>PIN</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Branch</th>
+            <th>College</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for x in Students %}
+            <tr>
+                <td>{{ x.PIN }}</td>
+                <td>{{ x.Name }}</td>
+                <td>{{ x.Age }}</td>
+                <td>{{ x.Branch }}</td>
+                <td>{{ x.College }}</td>
+                <td><a href="{% url 'update' x.id %}" class="btn update-btn">Update</a></td>
+                <td><a href="{% url 'delete1' x.id %}" class="btn delete-btn">Delete</a></td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="7">No student data found.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- 📑 Pagination -->
+    <div class="pagination">
+        {% if Students.has_previous %}
+            <a href="?page=1{% if query %}&q={{ query }}{% endif %}">First</a>
+            <a href="?page={{ Students.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Prev</a>
+        {% endif %}
+
+        <span class="current">Page {{ Students.number }} of {{ Students.paginator.num_pages }}</span>
+
+        {% if Students.has_next %}
+            <a href="?page={{ Students.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next</a>
+            <a href="?page={{ Students.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">Last</a>
+        {% endif %}
+    </div>
+
+    <!-- 🔙 Back -->
+    <div style="text-align:center">
+        <a href="{% url 'landingpage' %}" class="btn back-btn">← Back to Home</a>
+    </div>
+</div>
+</body>
+</html>

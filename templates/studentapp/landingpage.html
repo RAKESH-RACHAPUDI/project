@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Landing Page</title>
+
+  <!-- Bootstrap & Toastify CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+  <style>
+    body {
+      background-image: url("{% static 'CSS/backgroundimage.jpg' %}");
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .btn-custom {
+      min-width: 150px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+<!-- ✅ Sticky Navbar -->
+<nav class="navbar navbar-expand-lg" style="background: linear-gradient(90deg, #4e54c8, #8f94fb); padding: 12px 30px;">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white fw-bold" href="{% url 'landingpage' %}">
+      🎓 Student Management
+    </a>
+    <div class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-white" href="{% url 'landingpage' %}">🏠 Home</a>
+        </li>
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <span class="nav-link text-light">👋 Hello, {{ user.username }}</span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{% url 'logout' %}">🚪 Logout</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{% url 'registerpage' %}">📝 Register</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{% url 'login' %}">🔐 Login</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ✅ Landing Page Content -->
+<div class="container text-center" style="padding-top: 130px;">
+  <h1 class="display-5 text-white mb-5">Welcome to Student Management 📚</h1>
+
+  <div class="d-flex justify-content-center gap-4">
+    <a href="{% url 'adddetails' %}" class="btn btn-primary btn-custom shadow">➕ Add Student</a>
+    <a href="{% url 'showdetails' %}" class="btn btn-success btn-custom shadow">👁️ Show Students</a>
+  </div>
+</div>
+
+<!-- ✅ Toast Messages -->
+{% if messages %}
+<script>
+  {% for message in messages %}
+    Toastify({
+      text: "{{ message }}",
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "#4e54c8",
+      stopOnFocus: true,
+    }).showToast();
+  {% endfor %}
+</script>
+{% endif %}
+
+<!-- ✅ Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+</body>
+</html>

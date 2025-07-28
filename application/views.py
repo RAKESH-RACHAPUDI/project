@@ -9,7 +9,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 
 
-# ✅ Register View
+#  Register View
 def register_view(request):
     if request.method == 'POST':
         name = request.POST.get('username')
@@ -31,7 +31,7 @@ def register_view(request):
     return render(request, 'studentapp/registerpage.html')
 
 
-# ✅ Login View (Handles ?next= redirect)
+#  Login View (Handles ?next= redirect)
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('loginname')
@@ -47,13 +47,13 @@ def user_login(request):
     return render(request, 'studentapp/login.html')
 
 
-# ✅ Landing Page – Accessible without login
+# Landing Page – Accessible without login
 def landingpage(request):
     messages.info(request, "Welcome to the Student Management App!")
     return render(request, 'studentapp/landingpage.html')
 
 
-# ✅ Add Details – Login Required
+#  Add Details – Login Required
 @login_required(login_url='login')
 def adddetails(request):
     form = student_Form()
@@ -65,7 +65,7 @@ def adddetails(request):
     return render(request, 'studentapp/adddetails.html', {'form': form})
 
 
-# ✅ Show Details – Login Required + Search + Pagination
+#  Show Details – Login Required + Search + Pagination
 @login_required(login_url='login')
 def showdetails(request):
     query = request.GET.get('q', '')
@@ -88,7 +88,7 @@ def showdetails(request):
     })
 
 
-# ✅ Update – No login required
+#  Update – No login required
 def update(request, id):
     print("Update View Called")  # Optional debug
     data = get_object_or_404(Student, id=id)
@@ -101,7 +101,7 @@ def update(request, id):
     return render(request, 'studentapp/updatedetails.html', {'form': form})
 
 
-# ✅ Delete – No login required
+#  Delete – No login required
 def delete(request, id):
     student_data = get_object_or_404(Student, id=id)
     if request.method == 'POST':
@@ -110,7 +110,7 @@ def delete(request, id):
     return render(request, 'studentapp/deletedetails.html', {'Student': student_data})
 
 
-# ✅ Logout View – Redirect to register page
+#  Logout View – Redirect to register page
 def logout_view(request):
     logout(request)
     messages.success(request, "You have been logged out successfully.")
